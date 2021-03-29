@@ -17,6 +17,7 @@ const HomeScreen = ({ watchlist, currentIndex, swipeLeft, swipeRight }) => {
   let position = new Animated.ValueXY();
 
   const handleSwipeLeft = () => {
+    position.setValue({ x: 0, y: 0 });
     swipeLeft(), setMedia('');
   };
 
@@ -74,42 +75,34 @@ const HomeScreen = ({ watchlist, currentIndex, swipeLeft, swipeRight }) => {
   });
 
   const swipeLeftAnimation = (gestureState) => {
-    Animated.spring(position, {
+    Animated.timing(position, {
+      duration: 300,
       toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
       useNativeDriver: true,
-    }).start(() => {
-      position.setValue({ x: 0, y: 0 });
-    });
-    handleSwipeLeft();
+    }).start(handleSwipeLeft);
   };
 
   const swipeRightAnimation = (gestureState) => {
-    Animated.spring(position, {
+    Animated.timing(position, {
+      duration: 300,
       toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
       useNativeDriver: true,
-    }).start(() => {
-      position.setValue({ x: 0, y: 0 });
-    });
-    handleSwipeRight();
+    }).start(handleSwipeRight);
   };
 
   const handleChoice = (direction) => {
     if (direction < 0) {
-      Animated.spring(position, {
+      Animated.timing(position, {
+        duration: 500,
         toValue: { x: -SCREEN_WIDTH - 100, y: -100 },
         useNativeDriver: true,
-      }).start(() => {
-        position.setValue({ x: 0, y: 0 });
-      });
-      handleSwipeLeft();
+      }).start(handleSwipeLeft);
     } else if (direction > 0) {
-      Animated.spring(position, {
-        toValue: { x: SCREEN_WIDTH + 100, y: -100 },
+      Animated.timing(position, {
+        duration: 500,
+        toValue: { x: direction * SCREEN_WIDTH + 0.5 * SCREEN_WIDTH, y: -100 },
         useNativeDriver: true,
-      }).start(() => {
-        position.setValue({ x: 0, y: 0 });
-      });
-      handleSwipeRight();
+      }).start(handleSwipeRight);
     }
   };
 
@@ -170,6 +163,7 @@ const HomeScreen = ({ watchlist, currentIndex, swipeLeft, swipeRight }) => {
                 {item.name}
               </Text>
             </Animated.View>
+
             <Animated.View
               style={{
                 opacity: likeOpacity,
@@ -184,7 +178,7 @@ const HomeScreen = ({ watchlist, currentIndex, swipeLeft, swipeRight }) => {
                   borderWidth: 1,
                   borderColor: 'green',
                   color: 'green',
-                  fontSize: 32,
+                  fontSize: 50,
                   fontWeight: '800',
                   padding: 10,
                 }}>
@@ -206,7 +200,7 @@ const HomeScreen = ({ watchlist, currentIndex, swipeLeft, swipeRight }) => {
                   borderWidth: 1,
                   borderColor: 'red',
                   color: 'red',
-                  fontSize: 32,
+                  fontSize: 50,
                   fontWeight: '800',
                   padding: 10,
                 }}>
@@ -223,7 +217,7 @@ const HomeScreen = ({ watchlist, currentIndex, swipeLeft, swipeRight }) => {
               style={styles.gradient}></LinearGradient>
           </Animated.View>
         );
-      } else {
+      } else if (i === currentIndex + 1) {
         return (
           <Animated.View
             key={item.id}
@@ -248,7 +242,7 @@ const HomeScreen = ({ watchlist, currentIndex, swipeLeft, swipeRight }) => {
               <Text
                 style={{
                   color: 'white',
-                  fontSize: 30,
+                  fontSize: 32,
                   fontWeight: 'normal',
                   padding: 10,
                 }}>
@@ -269,7 +263,7 @@ const HomeScreen = ({ watchlist, currentIndex, swipeLeft, swipeRight }) => {
                   borderWidth: 1,
                   borderColor: 'green',
                   color: 'green',
-                  fontSize: 32,
+                  fontSize: 50,
                   fontWeight: '800',
                   padding: 10,
                 }}>
@@ -291,7 +285,7 @@ const HomeScreen = ({ watchlist, currentIndex, swipeLeft, swipeRight }) => {
                   borderWidth: 1,
                   borderColor: 'red',
                   color: 'red',
-                  fontSize: 32,
+                  fontSize: 50,
                   fontWeight: '800',
                   padding: 10,
                 }}>
