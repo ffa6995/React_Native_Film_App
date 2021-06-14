@@ -1,14 +1,70 @@
-import React from 'react';
+// @refresh state
+import React, { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SwipeScreen from './SwipeScreen/SwipeScreen';
 import Chat from './Chat';
 import AddTodo from '../containers/AddTodo';
 import Watchlist from '../components/Watchlist';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ApiKeys from '../utils/ApiKeys';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Button, TextInput, StyleSheet, Image } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
+// https://www.youtube.com/watch?v=E81jfHan8MM
+// https://www.youtube.com/watch?v=ZcaQJoXY-3Q
+// https://www.youtube.com/watch?v=GZKaVJEd4JU
+
+//initialize firbase
+if (!firebase.apps.length) {
+  firebase.initializeApp(ApiKeys.FirebaseConfig);
+}
+
+// const db = firebase
+//   .database()
+//   .ref('users/' + userId)
+//   .set();
+
 function MyTabs() {
+  const [user, setUser] = useState(null);
+  const [name, setName] = useState('');
+
+  useEffect(() => {
+    readUser();
+  }, []);
+
+  const readUser = async () => {
+    const user = await AsyncStorage.getItem('user');
+    if (user) {
+      setUser(JSON.parse(user));
+    }
+  };
+
+  const handlePress = async () => {
+    const _id = Math.random().toString(36).substring(7);
+    const user = { _id, name };
+    console.log(user);
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+    setUser(user);
+  };
+
+  if (!user) {
+    return (
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your name"
+          value={name}
+          onChangeText={setName}
+        />
+        <Button onPress={handlePress} title="Enter Application" />
+      </View>
+    );
+  }
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -43,5 +99,24 @@ function MyTabs() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 30,
+  },
+
+  input: {
+    height: 50,
+    width: '100%',
+    borderWidth: 1,
+    padding: 15,
+    marginBottom: 20,
+    borderColor: 'gray',
+  },
+});
 
 export default MyTabs;
