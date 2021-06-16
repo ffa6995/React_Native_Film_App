@@ -7,6 +7,7 @@ import ApiCaller from '../ApiCaller';
 import Card from './Card';
 import CardTitle from './CardTitle';
 import Header from '../Header';
+import { Text } from 'react-native';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -16,6 +17,7 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
   const [currentItem, setCurrentItem] = React.useState('');
   const [providers, setProviders] = React.useState('');
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [recommendationsId, setRecommendationsId] = useState(getRandomIDFromWatchlist());
   const apiCaller = new ApiCaller();
 
@@ -24,30 +26,47 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
   let value = 0;
 
   useEffect(() => {
+    console.log('initial use effect');
     fetchCardData(recommendationsId);
   }, []);
 
   async function fetchCardData(id) {
-    const resp = await apiCaller.fetchRecommendedMovies(id);
-
+    setLoading(true);
+    let resp = await apiCaller.fetchRecommendedMovies(id);
+    // TODO: fetch also from other genres and concat them
+    // filter on movies that are already in watchlist and randomize the order
+    resp.results = resp.results
+      .filter((item) => {
+        return !movieExistsInWatchlist(item.id);
+      })
+      .map((item) => {
+        return item;
+      });
+    resp.results.sort(() => Math.random() - 0.5);
     setData(resp);
-    setCurrentItem(resp.results[currentIndex]);
+    setCurrentIndex(0);
+    setCurrentItem(resp.results[0]);
+    setLoading(false);
+  }
+
+  async function fetchProviders() {
+    setProviders(await apiCaller.fetchProviders('movie', currentItem.id));
   }
 
   useEffect(() => {
-    if (data != undefined && data.results != undefined) {
+    if (currentItem == undefined) {
+      fetchCardData(getRandomIDFromWatchlist());
+    }
+  }, [currentItem]);
+
+  useEffect(() => {
+    if (data != undefined && data.results != undefined && currentItem) {
       console.log('curr index:' + currentIndex);
-      // if (currentIndex == 5) {
-      //   setCurrentIndex(0);
-      //   fetchCardData(getRandomIDFromWatchlist());
-      // }
+
       setCurrentItem(data.results[currentIndex]);
-      async function fetchProviders() {
-        setProviders(await apiCaller.fetchProviders('movie', currentItem.id));
-      }
       fetchProviders();
     }
-  }, [currentIndex, currentItem, data]);
+  }, [currentIndex, currentItem]);
 
   animatedValue.addListener(({ newValue }) => {
     value = newValue;
@@ -57,6 +76,12 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
     return watchlist.length > 0
       ? watchlist[Math.floor(Math.random() * watchlist.length)].id.toString()
       : '671';
+  }
+
+  function movieExistsInWatchlist(id) {
+    return watchlist.some((el) => {
+      return el.id === id;
+    });
   }
 
   const handleSwipeLeft = () => {
@@ -89,18 +114,31 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
   return (
     <View style={styles.container}>
       <View style={{ height: 70 }}>{<Header></Header>}</View>
-      <View style={{ height: 60 }}>
-        <CardTitle title={currentItem.original_title} providers={providers}></CardTitle>
-      </View>
-      {/* <View style={{ height: 30 }} /> */}
-      <View>
-        <Card
-          data={data}
-          position={position}
-          currentIndex={currentIndex}
-          swipeLeft={handleSwipeLeft}
-          swipeRight={handleSwipeRight}></Card>
-      </View>
+      {!loading ? (
+        <>
+          <View style={{ height: 60 }}>
+            {currentItem ? (
+              <>
+                <CardTitle title={currentItem.original_title} providers={providers}></CardTitle>
+              </>
+            ) : (
+              <Text>Loading...</Text>
+            )}
+          </View>
+
+          <View>
+            <Card
+              data={data}
+              position={position}
+              currentIndex={currentIndex}
+              swipeLeft={handleSwipeLeft}
+              swipeRight={handleSwipeRight}></Card>
+          </View>
+        </>
+      ) : (
+        <Text>Loading...</Text>
+      )}
+
       <ActionFooter handleChoice={handleChoice} />
     </View>
   );

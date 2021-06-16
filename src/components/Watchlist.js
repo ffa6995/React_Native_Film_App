@@ -21,7 +21,7 @@ const Watchlist = ({ watchlist, addToWatchlist }) => {
       <Title>My Watchlist</Title>
       <FlatList
         data={watchlist}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item, index }) => {
           return (
             <>

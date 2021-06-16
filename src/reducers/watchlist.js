@@ -2,8 +2,8 @@ import { SWIPE_LEFT, SWIPE_RIGHT } from '../actions/actionTypes';
 
 const initialState = {
   watchlist: [
-    // { id: '55', name: 'test' },
-    // { id: '66', name: '1234' },
+    // { id: '585', name: 'Monsters, Inc' },
+    // { id: '557', name: 'Spider-Man' },
   ],
 };
 
