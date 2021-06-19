@@ -26,7 +26,6 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
   let value = 0;
 
   useEffect(() => {
-    console.log('initial use effect');
     fetchCardData(recommendationsId);
   }, []);
 
@@ -34,6 +33,7 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
     setLoading(true);
     let resp = await apiCaller.fetchRecommendedMovies(id);
     // TODO: fetch also from other genres and concat them
+    // TODO: also filter on things in a dislike list
     // filter on movies that are already in watchlist and randomize the order
     resp.results = resp.results
       .filter((item) => {
@@ -61,8 +61,6 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
 
   useEffect(() => {
     if (data != undefined && data.results != undefined && currentItem) {
-      console.log('curr index:' + currentIndex);
-
       setCurrentItem(data.results[currentIndex]);
       fetchProviders();
     }
@@ -113,7 +111,6 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ height: 70 }}>{<Header></Header>}</View>
       {!loading ? (
         <>
           <View style={{ height: 60 }}>
@@ -138,7 +135,6 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
       ) : (
         <Text>Loading...</Text>
       )}
-
       <ActionFooter handleChoice={handleChoice} />
     </View>
   );
@@ -149,7 +145,7 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // backgroundColor: '#1A1A1A',
   },
 
   gradient: {

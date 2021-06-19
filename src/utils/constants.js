@@ -4,5 +4,6 @@ const { width, height } = Dimensions.get('screen');
 
 export const COLORS = {
   like: '#00eda6',
-  nope: '#ff006f',
+  dislike: '#ff006f',
+  background: '#1A1A1A',
 };

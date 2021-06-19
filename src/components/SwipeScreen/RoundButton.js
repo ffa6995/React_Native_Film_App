@@ -23,7 +23,7 @@ const RoundButton = ({ name, size, color, onPress }) => {
         onPress();
       }}
       delayPressOut={120}>
-      <Animated.View style={[styles.container, { transform: [{ scale }] }]}>
+      <Animated.View style={[styles.container, { transform: [{ scale }] }, { borderColor: color }]}>
         <FontAwesome name={name} size={size} color={color}></FontAwesome>
       </Animated.View>
     </TouchableWithoutFeedback>
@@ -32,13 +32,15 @@ const RoundButton = ({ name, size, color, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     backgroundColor: '#fff',
-    elevation: 5,
+    // elevation: 5,
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'transparent',
+    borderWidth: 3,
   },
 });
 
