@@ -15,7 +15,7 @@ const ActionFooter = ({ handleChoice }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // bottom: 20
+    bottom: -20,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },

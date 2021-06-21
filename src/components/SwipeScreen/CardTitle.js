@@ -1,6 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, Image } from 'react-native';
 import ApiKeys from '../../utils/ApiKeys';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const CardTitle = ({ title, providers }) => {
   return (
@@ -34,7 +37,7 @@ const CardTitle = ({ title, providers }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 400,
+    width: SCREEN_WIDTH,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
