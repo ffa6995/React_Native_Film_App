@@ -184,7 +184,7 @@ const Card = ({ data, currentIndex, swipeLeft, swipeRight, position }) => {
                   style={[
                     rotateAndTranslate,
                     {
-                      height: SCREEN_HEIGHT - 180,
+                      height: SCREEN_HEIGHT - 220,
                       width: SCREEN_WIDTH,
                       padding: 10,
                     },
@@ -302,7 +302,7 @@ const Card = ({ data, currentIndex, swipeLeft, swipeRight, position }) => {
                   {
                     opacity: nextCardOpacity,
                     transform: [{ scale: nextCardScale }],
-                    height: SCREEN_HEIGHT - 180,
+                    height: SCREEN_HEIGHT - 220,
                     width: SCREEN_WIDTH,
                     padding: 10,
                     position: 'absolute',

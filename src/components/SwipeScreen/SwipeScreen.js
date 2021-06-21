@@ -131,11 +131,11 @@ const SwipeScreen = ({ watchlist, swipeLeft, swipeRight }) => {
               swipeLeft={handleSwipeLeft}
               swipeRight={handleSwipeRight}></Card>
           </View>
+          <ActionFooter handleChoice={handleChoice} />
         </>
       ) : (
         <Text>Loading...</Text>
       )}
-      <ActionFooter handleChoice={handleChoice} />
     </View>
   );
 };
